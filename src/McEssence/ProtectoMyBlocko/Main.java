@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,15 @@ public class Main extends JavaPlugin {
         }
         getConfig().options().copyDefaults(true);
         saveConfig();
+        File trustsFile = new File(this.getDataFolder() + File.separator + "trusts.yml");
+        if(!trustsFile.exists()){
+            try {
+                trustsFile.createNewFile();
+            }catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         config = new Config(this);
         if (!config.getEnabled()){
             Bukkit.getLogger().info(ChatColor.RED + " Disabled" + this.getName() + " As not enabled in config");
@@ -32,7 +42,8 @@ public class Main extends JavaPlugin {
         }
 
         Bukkit.getLogger().info(ChatColor.GREEN + "Enabled" + this.getName());
-        this.getCommand("reload").setExecutor(new Commands());
+        this.getCommand("ProtectoMyBlocko").setExecutor(new Commands(config, this));
+
         getServer().getPluginManager().registerEvents(new Listeners(config), this);
 
     }

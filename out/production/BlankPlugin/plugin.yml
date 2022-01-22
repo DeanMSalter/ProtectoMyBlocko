@@ -4,21 +4,45 @@ author: Deano3663
 main: McEssence.ProtectoMyBlocko.Main
 api-version: 1.18
 commands:
-  reload:
-    description: reload ProtectoMyBlocko
-    usage: /<command>
-    permission: ProtectoMyBlocko.admin.reload
+  ProtectoMyBlocko:
+    description: ProtectoMyBlocko
+    usage: /ProtectoMyBlocko
+    permission: ProtectoMyBlocko
+  ProtectoMyBlocko trust:
+    description: trust a player
+    usage: /ProtectoMyBlocko trust (playerName)
+    permission: ProtectoMyBlocko.trust
+  ProtectoMyBlocko untrust:
+    description: untrust a player
+    usage: /ProtectoMyBlocko untrust (playerName)
+    permission: ProtectoMyBlocko.untrust
+  ProtectoMyBlocko trustlist:
+    description: list of trusted players
+    usage: /ProtectoMyBlocko trustlist
+    permission: ProtectoMyBlocko.trustlist
+  ProtectoMyBlocko reload:
+    description: trust a player
+    usage: /ProtectoMyBlocko reload
+    permission: ProtectoMyBlocko.trust
 permissions:
   ProtectoMyBlocko.player.*:
     description: Gives access to all ProtectoMyBlocko permissions
     children:
       ProtectoMyBlocko.bypass: true
+      ProtectoMyBlocko.protect: true
+      ProtectoMyBlocko.trust: true
   ProtectoMyBlocko.admin.*:
     description: Gives access to all ProtectoMyBlocko admin permissions
     children:
       ProtectoMyBlocko.admin.reload: true
   ProtectoMyBlocko.bypass:
     description: Allows you to break other players protected blocks
+    default: op
+  ProtectoMyBlocko.protect:
+    description: Allows you to protect blocks
+    default: op
+  ProtectoMyBlocko.trust:
+    description: Allows you to trust a player
     default: op
   ProtectoMyBlocko.admin.reload:
     description: Allows you to reload ProtectoMyBlocko configs
