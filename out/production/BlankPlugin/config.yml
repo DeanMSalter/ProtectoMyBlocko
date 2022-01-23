@@ -3,4 +3,4 @@ general:
 excludeBlocks: [COBBLESTONE, DIRT]
 protectionDelay: 900
 messages:
-  canNotBreak: "You need to play for an hour before you can break blocks placed by other players. Use /rank to check your playtime."
+  canNotBreak: "You need to play for an hour before you can break blocks placed by other players. Use §c/rank§r to check your playtime. Your friend can allow you to break their blocks with §c/trust (playerName)."

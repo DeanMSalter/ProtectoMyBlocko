@@ -26,8 +26,7 @@ public class Commands implements CommandExecutor {
 
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
         if (args == null || args[0] == null) {
-            commandSender.sendMessage("Help screen here");
-            return true;
+            return false;
         }
         switch(args[0].toUpperCase()) {
             case "RELOAD":
@@ -43,7 +42,6 @@ public class Commands implements CommandExecutor {
                 trustList(commandSender, command, label, args);
                 break;
             default:
-                commandSender.sendMessage("Help screen here");
                 break;
         }
         return true;
@@ -130,6 +128,8 @@ public class Commands implements CommandExecutor {
             trustedPlayers.remove(UUIDOfPlayerToUntrust);
             trustsConfig.set(String.valueOf(player.getUniqueId()), trustedPlayers);
             trustsConfig.save(trustsFile);
+            commandSender.sendMessage("You have unTrusted " + playerNameToUntrust);
+
             return true;
         }catch(Exception e) {
             Bukkit.getLogger().info(ChatColor.RED + "Exception " + e.getMessage());
