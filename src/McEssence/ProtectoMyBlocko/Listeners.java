@@ -62,6 +62,8 @@ public class Listeners implements Listener {
         } else if(holder instanceof DoubleChest){
             DoubleChest doubleChest  = (DoubleChest) holder;
             block = doubleChest.getLocation().getBlock();
+        } else {
+            return;
         }
         if (!IsAllowed(block, (Player) event.getPlayer())) {
             event.setCancelled(true);
@@ -71,6 +73,9 @@ public class Listeners implements Listener {
 
 
     private boolean IsAllowed(Block block, Player player) {
+        if (block == null || player == null) {
+            return true;
+        }
         try {
             final PersistentDataContainer customBlockData = new CustomBlockData(block, plugin);
             if (!customBlockData.has(blockOwnerKey, PersistentDataType.BYTE_ARRAY)) return true;
