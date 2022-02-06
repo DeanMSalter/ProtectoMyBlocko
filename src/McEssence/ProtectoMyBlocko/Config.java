@@ -30,6 +30,10 @@ public class Config{
     public String getCanNotBreak(){
         return main.getConfig().getString("messages.canNotBreak");
     }
+    public String getCanNotOpen(){
+        return main.getConfig().getString("messages.canNotOpen");
+    }
+
     public int getProtectionDelay(){
         return main.getConfig().getInt("protectionDelay");
     }

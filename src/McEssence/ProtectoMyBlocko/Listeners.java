@@ -3,12 +3,18 @@ package McEssence.ProtectoMyBlocko;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.Block;
+import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
@@ -40,21 +46,54 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event){
-        final PersistentDataContainer customBlockData = new CustomBlockData(event.getBlock(), plugin);
-        if (!customBlockData.has(blockOwnerKey, PersistentDataType.BYTE_ARRAY)) return;
-        if (Instant.now().getEpochSecond() - customBlockData.get(protectionDateTimeKey, PersistentDataType.LONG) < config.getProtectionDelay()) return;
+        if (!IsAllowed(event.getBlock(),event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(config.getCanNotBreak());
+        }
+    }
+
+    @EventHandler
+    public void onInventoryOpenEvent(InventoryOpenEvent event){
+        InventoryHolder holder = event.getInventory().getHolder();
+        Block block = null;
+        if (holder instanceof Chest) {
+            Chest chest  = (Chest) holder;
+            block = chest.getBlock();
+        } else if(holder instanceof DoubleChest){
+            DoubleChest doubleChest  = (DoubleChest) holder;
+            block = doubleChest.getLocation().getBlock();
+        }
+        if (!IsAllowed(block, (Player) event.getPlayer())) {
+            event.setCancelled(true);
+            event.getPlayer().sendMessage(config.getCanNotOpen());
+        }
+    }
+
+
+    private boolean IsAllowed(Block block, Player player) {
         try {
-            if (!Arrays.equals(Util.getBytesFromUUID(event.getPlayer().getUniqueId()), (customBlockData.get(blockOwnerKey, PersistentDataType.BYTE_ARRAY)))) {
-                if (!config.getTrustedPlayers(Util.getUUIDFromBytes(customBlockData.get(blockOwnerKey, PersistentDataType.BYTE_ARRAY))).contains(String.valueOf(event.getPlayer().getUniqueId()))) {
-                    if (!event.getPlayer().hasPermission("ProtectoMyBlocko.bypass")) {
-                        event.setCancelled(true);
-                        event.getPlayer().sendMessage(config.getCanNotBreak());
+            final PersistentDataContainer customBlockData = new CustomBlockData(block, plugin);
+            if (!customBlockData.has(blockOwnerKey, PersistentDataType.BYTE_ARRAY)) return true;
+            if (!customBlockData.has(protectionDateTimeKey, PersistentDataType.LONG)) return true;
+
+            if (Instant.now().getEpochSecond() - customBlockData.get(protectionDateTimeKey, PersistentDataType.LONG) < config.getProtectionDelay()) return true;
+
+            byte[] playerBytes = Util.getBytesFromUUID(player.getUniqueId());
+            byte[] blockOwnerBytes = customBlockData.get(blockOwnerKey, PersistentDataType.BYTE_ARRAY);
+            UUID blockOwnerUUID = Util.getUUIDFromBytes(blockOwnerBytes);
+
+            if (!Arrays.equals(playerBytes, blockOwnerBytes)) {
+                if (!config.getTrustedPlayers(blockOwnerUUID).contains(String.valueOf(player.getUniqueId()))) {
+                    if (!player.hasPermission("ProtectoMyBlocko.bypass")) {
+                        return false;
                     }
                 }
             }
-        } catch (Exception e) {
-            Bukkit.getLogger().severe("Could not get owner from block.");
+            return true;
+        }catch(Exception e){
+            Bukkit.getLogger().severe("An error occured when checking if a player can interact with block.");
             e.printStackTrace();
         }
+        return true;
     }
 }
