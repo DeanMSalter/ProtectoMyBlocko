@@ -23,7 +23,7 @@ commands:
   ProtectoMyBlocko reload:
     description: trust a player
     usage: /ProtectoMyBlocko reload
-    permission: ProtectoMyBlocko.trust
+    permission: ProtectoMyBlocko.reload
 permissions:
   ProtectoMyBlocko.player.*:
     description: Gives access to all ProtectoMyBlocko permissions
