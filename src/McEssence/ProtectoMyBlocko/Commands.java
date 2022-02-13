@@ -25,21 +25,41 @@ public class Commands implements CommandExecutor {
     }
 
     public boolean onCommand(CommandSender commandSender, Command command, String label, String[] args) {
-        if (args == null || args[0] == null) {
+        if (args == null || args.length == 0) {
             return false;
+        }
+        Player player = null;
+        if (commandSender instanceof Player){
+            player = (Player) commandSender;
         }
         switch(args[0].toUpperCase()) {
             case "RELOAD":
-                reload(commandSender, command, label, args);
+                if (player == null || player.hasPermission("ProtectoMyBlocko.admin.reload")) {
+                    reload(commandSender, command, label, args);
+                } else {
+                    commandSender.sendMessage("You do not have permission");
+                }
                 break;
             case "TRUST":
-                trust(commandSender, command, label, args);
+                if (player != null && player.hasPermission("ProtectoMyBlocko.trust")) {
+                    trust(commandSender, command, label, args);
+                } else {
+                    commandSender.sendMessage("You do not have permission");
+                }
                 break;
             case "UNTRUST":
-                unTrust(commandSender, command, label, args);
+                if (player != null && player.hasPermission("ProtectoMyBlocko.untrust")) {
+                    unTrust(commandSender, command, label, args);
+                } else {
+                    commandSender.sendMessage("You do not have permission");
+                }
                 break;
             case "TRUSTLIST":
-                trustList(commandSender, command, label, args);
+                if (player != null && player.hasPermission("ProtectoMyBlocko.trustlist")) {
+                    trustList(commandSender, command, label, args);
+                } else {
+                    commandSender.sendMessage("You do not have permission");
+                }
                 break;
             default:
                 break;

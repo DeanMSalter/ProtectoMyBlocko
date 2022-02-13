@@ -31,6 +31,7 @@ permissions:
       ProtectoMyBlocko.bypass: true
       ProtectoMyBlocko.protect: true
       ProtectoMyBlocko.trust: true
+      ProtectoMyBlocko.untrust: true
   ProtectoMyBlocko.admin.*:
     description: Gives access to all ProtectoMyBlocko admin permissions
     children:
@@ -43,6 +44,12 @@ permissions:
     default: op
   ProtectoMyBlocko.trust:
     description: Allows you to trust a player
+    default: op
+  ProtectoMyBlocko.untrust:
+    description: Allows you to untrust a player
+    default: op
+  ProtectoMyBlocko.trustlist:
+    description: Allows you to view trusted players
     default: op
   ProtectoMyBlocko.admin.reload:
     description: Allows you to reload ProtectoMyBlocko configs
