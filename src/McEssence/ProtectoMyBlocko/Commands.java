@@ -28,37 +28,25 @@ public class Commands implements CommandExecutor {
         if (args == null || args.length == 0) {
             return false;
         }
-        Player player = null;
-        if (commandSender instanceof Player){
-            player = (Player) commandSender;
-        }
         switch(args[0].toUpperCase()) {
             case "RELOAD":
-                if (player == null || player.hasPermission("ProtectoMyBlocko.admin.reload")) {
+                if (hasPermission(commandSender, "ProtectoMyBlocko.admin.reload", true)) {
                     reload(commandSender, command, label, args);
-                } else {
-                    commandSender.sendMessage("You do not have permission");
                 }
                 break;
             case "TRUST":
-                if (player != null && player.hasPermission("ProtectoMyBlocko.trust")) {
+                if (hasPermission(commandSender, "ProtectoMyBlocko.player.trust", false)) {
                     trust(commandSender, command, label, args);
-                } else {
-                    commandSender.sendMessage("You do not have permission");
                 }
                 break;
             case "UNTRUST":
-                if (player != null && player.hasPermission("ProtectoMyBlocko.untrust")) {
+                if (hasPermission(commandSender, "ProtectoMyBlocko.player.untrust", false)) {
                     unTrust(commandSender, command, label, args);
-                } else {
-                    commandSender.sendMessage("You do not have permission");
                 }
                 break;
             case "TRUSTLIST":
-                if (player != null && player.hasPermission("ProtectoMyBlocko.trustlist")) {
+                if (hasPermission(commandSender, "ProtectoMyBlocko.player.trustlist", false)) {
                     trustList(commandSender, command, label, args);
-                } else {
-                    commandSender.sendMessage("You do not have permission");
                 }
                 break;
             default:
@@ -204,6 +192,21 @@ public class Commands implements CommandExecutor {
     }
     private Boolean checkPlayerNameSupplied(String[] args){
         return args != null && args[1] != null;
+    }
+    private Boolean hasPermission(CommandSender commandSender, String permission, boolean allowConsole) {
+        if (!(commandSender instanceof Player) && !allowConsole) {
+            commandSender.sendMessage("This command can not be run from the console.");
+            return false;
+        }else if(!(commandSender instanceof Player)) {
+            return true;
+        }
+        Player player = (Player) commandSender;
+        if (player.hasPermission(permission)) {
+            return true;
+        }else {
+            commandSender.sendMessage("You do not have permission.");
+        }
+        return false;
     }
 }
 
