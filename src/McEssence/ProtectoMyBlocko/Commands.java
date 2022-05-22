@@ -49,6 +49,11 @@ public class Commands implements CommandExecutor {
                     trustList(commandSender, command, label, args);
                 }
                 break;
+            case "TRUSTLISTOTHER":
+                if (hasPermission(commandSender, "ProtectoMyBlocko.admin.trustlistother", false)) {
+                    trustListOther(commandSender, command, label, args);
+                }
+                break;
             default:
                 break;
         }
@@ -168,6 +173,33 @@ public class Commands implements CommandExecutor {
             }
             if (trustedPlayersString == "") {
                 commandSender.sendMessage("You have not trusted any players.");
+                return true;
+            } else {
+                commandSender.sendMessage(trustedPlayersString);
+            }
+            return true;
+        }catch(Exception e) {
+            Bukkit.getLogger().info(ChatColor.RED + "Exception " + e.getMessage());
+            return false;
+        }
+    }
+
+    private Boolean trustListOther(CommandSender commandSender, Command command, String s, String[] args){
+        try {
+            File trustsFile = new File(main.getDataFolder(), "trusts.yml");
+            FileConfiguration trustsConfig = YamlConfiguration.loadConfiguration(trustsFile);
+            Player player = Bukkit.getServer().getPlayer(args[1]);
+            ArrayList<String> trustedPlayers = new ArrayList<>();
+            if (trustsConfig.getList(String.valueOf(player.getUniqueId())) != null) {
+                trustedPlayers = (ArrayList<String>) trustsConfig.getList(String.valueOf(player.getUniqueId()));
+            }
+            String trustedPlayersString = "";
+            for (String trustedPlayer : trustedPlayers) {
+                String trustedPlayerName = Bukkit.getServer().getOfflinePlayer(UUID.fromString(trustedPlayer)).getName();
+                trustedPlayersString = trustedPlayersString + trustedPlayerName;
+            }
+            if (trustedPlayersString == "") {
+                commandSender.sendMessage("They have not trusted any players.");
                 return true;
             } else {
                 commandSender.sendMessage(trustedPlayersString);

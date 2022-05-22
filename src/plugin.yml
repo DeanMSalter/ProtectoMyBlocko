@@ -24,6 +24,10 @@ commands:
     description: trust a player
     usage: /ProtectoMyBlocko reload
     permission: ProtectoMyBlocko.admin.reload
+  ProtectoMyBlocko trustlistother:
+    description: view a players trustlist
+    usage: /ProtectoMyBlocko trustlistother
+    permission: ProtectoMyBlocko.admin.trustlistother
 permissions:
   ProtectoMyBlocko.player.*:
     description: Gives access to all ProtectoMyBlocko permissions
@@ -37,6 +41,7 @@ permissions:
     description: Gives access to all ProtectoMyBlocko admin permissions
     children:
       ProtectoMyBlocko.admin.reload: true
+      ProtectoMyBlocko.admin.trustlistother: true
   ProtectoMyBlocko.bypass:
     description: Allows you to break other players protected blocks
     default: op
@@ -54,4 +59,7 @@ permissions:
     default: op
   ProtectoMyBlocko.admin.reload:
     description: Allows you to reload ProtectoMyBlocko configs
+    default: op
+  ProtectoMyBlocko.admin.trustlistother:
+    description: Allows you to view other peoples trustlist
     default: op

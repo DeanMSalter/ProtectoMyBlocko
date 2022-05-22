@@ -11,31 +11,37 @@ commands:
   ProtectoMyBlocko trust:
     description: trust a player
     usage: /ProtectoMyBlocko trust (playerName)
-    permission: ProtectoMyBlocko.trust
+    permission: ProtectoMyBlocko.player.trust
   ProtectoMyBlocko untrust:
     description: untrust a player
     usage: /ProtectoMyBlocko untrust (playerName)
-    permission: ProtectoMyBlocko.untrust
+    permission: ProtectoMyBlocko.player.untrust
   ProtectoMyBlocko trustlist:
     description: list of trusted players
     usage: /ProtectoMyBlocko trustlist
-    permission: ProtectoMyBlocko.trustlist
+    permission: ProtectoMyBlocko.player.trustlist
   ProtectoMyBlocko reload:
     description: trust a player
     usage: /ProtectoMyBlocko reload
-    permission: ProtectoMyBlocko.reload
+    permission: ProtectoMyBlocko.admin.reload
+  ProtectoMyBlocko trustlistother:
+    description: view a players trustlist
+    usage: /ProtectoMyBlocko trustlistother
+    permission: ProtectoMyBlocko.admin.trustlistother
 permissions:
   ProtectoMyBlocko.player.*:
     description: Gives access to all ProtectoMyBlocko permissions
     children:
-      ProtectoMyBlocko.bypass: true
-      ProtectoMyBlocko.protect: true
-      ProtectoMyBlocko.trust: true
-      ProtectoMyBlocko.untrust: true
+      ProtectoMyBlocko.player.bypass: true
+      ProtectoMyBlocko.player.protect: true
+      ProtectoMyBlocko.player.trust: true
+      ProtectoMyBlocko.player.untrust: true
+      ProtectoMyBlocko.player.trustlist: true
   ProtectoMyBlocko.admin.*:
     description: Gives access to all ProtectoMyBlocko admin permissions
     children:
       ProtectoMyBlocko.admin.reload: true
+      ProtectoMyBlocko.admin.trustlistother: true
   ProtectoMyBlocko.bypass:
     description: Allows you to break other players protected blocks
     default: op
@@ -53,4 +59,7 @@ permissions:
     default: op
   ProtectoMyBlocko.admin.reload:
     description: Allows you to reload ProtectoMyBlocko configs
+    default: op
+  ProtectoMyBlocko.admin.trustlistother:
+    description: Allows you to view other peoples trustlist
     default: op

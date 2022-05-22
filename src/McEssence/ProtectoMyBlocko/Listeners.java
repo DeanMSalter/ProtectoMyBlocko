@@ -49,6 +49,9 @@ public class Listeners implements Listener {
         if (!IsAllowed(event.getBlock(),event.getPlayer())) {
             event.setCancelled(true);
             event.getPlayer().sendMessage(config.getCanNotBreak());
+        } else {
+            CustomBlockData customBlockData = new CustomBlockData(event.getBlock(), plugin);
+            customBlockData.clear();
         }
     }
 
