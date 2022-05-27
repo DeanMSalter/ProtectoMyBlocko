@@ -3,6 +3,7 @@ package McEssence.ProtectoMyBlocko;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
@@ -20,6 +21,8 @@ import org.bukkit.persistence.PersistentDataType;
 import org.bukkit.plugin.Plugin;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.Arrays;
 import java.util.UUID;
 
@@ -46,12 +49,22 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH, ignoreCancelled = true)
     public void onBlockBreak(BlockBreakEvent event){
-        if (!IsAllowed(event.getBlock(),event.getPlayer())) {
-            event.setCancelled(true);
-            event.getPlayer().sendMessage(config.getCanNotBreak());
+        if (config.getHighValueBlocks().contains(event.getBlock().getType())) {
+            if (!IsAllowedHighValue(event.getBlock(), event.getPlayer())){
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(config.getCanNotBreakHighValue());
+            } else {
+                CustomBlockData customBlockData = new CustomBlockData(event.getBlock(), plugin);
+                customBlockData.clear();
+            }
         } else {
-            CustomBlockData customBlockData = new CustomBlockData(event.getBlock(), plugin);
-            customBlockData.clear();
+            if (!IsAllowed(event.getBlock(),event.getPlayer())) {
+                event.setCancelled(true);
+                event.getPlayer().sendMessage(config.getCanNotBreak());
+            } else {
+                CustomBlockData customBlockData = new CustomBlockData(event.getBlock(), plugin);
+                customBlockData.clear();
+            }
         }
     }
 
@@ -93,6 +106,50 @@ public class Listeners implements Listener {
             if (!Arrays.equals(playerBytes, blockOwnerBytes)) {
                 if (!config.getTrustedPlayers(blockOwnerUUID).contains(String.valueOf(player.getUniqueId()))) {
                     if (!player.hasPermission("ProtectoMyBlocko.bypass")) {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }catch(Exception e){
+            Bukkit.getLogger().severe("An error occured when checking if a player can interact with block.");
+            e.printStackTrace();
+        }
+        return true;
+    }
+    private boolean IsAllowedHighValue(Block block, Player player) {
+        if (block == null || player == null) {
+            return true;
+        }
+        try {
+            final PersistentDataContainer customBlockData = new CustomBlockData(block, plugin);
+            if (!customBlockData.has(blockOwnerKey, PersistentDataType.BYTE_ARRAY)) return true;
+            if (!customBlockData.has(protectionDateTimeKey, PersistentDataType.LONG)) return true;
+
+            if (Instant.now().getEpochSecond() - customBlockData.get(protectionDateTimeKey, PersistentDataType.LONG) < config.getProtectionDelay()) return true;
+
+            byte[] playerBytes = Util.getBytesFromUUID(player.getUniqueId());
+            byte[] blockOwnerBytes = customBlockData.get(blockOwnerKey, PersistentDataType.BYTE_ARRAY);
+            UUID blockOwnerUUID = Util.getUUIDFromBytes(blockOwnerBytes);
+
+            if (!Arrays.equals(playerBytes, blockOwnerBytes)) {
+                if (!config.getTrustedPlayers(blockOwnerUUID).contains(String.valueOf(player.getUniqueId()))) {
+                    if (player.hasPermission("ProtectoMyBlocko.bypass.highvalue") ) {
+                        return true;
+                    }
+                    Player blockOwner = Bukkit.getPlayer(blockOwnerUUID);
+                    if (blockOwner == null) {
+                        OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(blockOwnerUUID);
+                        LocalDateTime lastOnline = Instant.ofEpochMilli(offlinePlayer.getLastPlayed())
+                                .atZone(ZoneId.systemDefault())
+                                .toLocalDateTime();
+                        LocalDateTime abandonedDate = LocalDateTime.now().minusSeconds(config.getAbandonedDays());
+                        if (lastOnline.isAfter(abandonedDate)) {
+                            return false;
+                        }else {
+                            return true;
+                        }
+                    } else {
                         return false;
                     }
                 }

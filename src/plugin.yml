@@ -45,6 +45,9 @@ permissions:
   ProtectoMyBlocko.bypass:
     description: Allows you to break other players protected blocks
     default: op
+  ProtectoMyBlocko.bypass.highvalue:
+    description: Allows you to break other players high value blocks
+    default: op
   ProtectoMyBlocko.protect:
     description: Allows you to protect blocks
     default: op

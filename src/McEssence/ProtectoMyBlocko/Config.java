@@ -30,6 +30,12 @@ public class Config{
     public String getCanNotBreak(){
         return main.getConfig().getString("messages.canNotBreak");
     }
+    public String getCanNotBreakHighValue(){
+        return main.getConfig().getString("messages.canNotBreakHighValue");
+    }
+    public int getAbandonedDays(){
+        return main.getConfig().getInt("abandonedDays");
+    }
     public String getCanNotOpen(){
         return main.getConfig().getString("messages.canNotOpen");
     }
@@ -50,6 +56,20 @@ public class Config{
 
         }
         return excludedBlocks;
+    }
+
+    public ArrayList<Material> getHighValueBlocks(){
+        ArrayList<Material> highValueBlocks = new ArrayList<>();
+        try{
+            ArrayList<String> highValueBlocksNames = (ArrayList<String>) main.getConfig().getList("highValueBlocks");
+            for (String blockName : highValueBlocksNames) {
+                highValueBlocks.add(Material.getMaterial(blockName));
+            }
+        }catch(Exception e){
+            Bukkit.getLogger().info(ChatColor.RED + "Error occured when getting highValueBlocks");
+
+        }
+        return highValueBlocks;
     }
     public ArrayList<String> getTrustedPlayers(UUID playerUUID) {
         ArrayList<String> trustedPlayers = new ArrayList<>();
