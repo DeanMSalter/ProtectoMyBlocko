@@ -78,6 +78,8 @@ public class Config{
         FileConfiguration trustsConfig = YamlConfiguration.loadConfiguration(trustsFile);
         if (trustsConfig.getList(String.valueOf(playerUUID)) != null) {
             trustedPlayers = (ArrayList<String>) trustsConfig.getList(String.valueOf(playerUUID));
+            Bukkit.getLogger().info("trustedPlayers " + trustedPlayers.toString());
+
         }
         return trustedPlayers;
     }

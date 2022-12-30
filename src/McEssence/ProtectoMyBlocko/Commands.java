@@ -12,6 +12,7 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.UUID;
 
 
@@ -35,6 +36,9 @@ public class Commands implements CommandExecutor {
                 }
                 break;
             case "TRUST":
+                Bukkit.getLogger().info(ChatColor.RED + commandSender.getName());
+                Bukkit.getLogger().info(hasPermission(commandSender, "ProtectoMyBlocko.player.trust", false).toString());
+                Bukkit.getLogger().info(Arrays.toString(args));
                 if (hasPermission(commandSender, "ProtectoMyBlocko.player.trust", false)) {
                     trust(commandSender, command, label, args);
                 }
@@ -62,6 +66,7 @@ public class Commands implements CommandExecutor {
 
     private Boolean trust(CommandSender commandSender, Command command, String s, String[] args){
         try {
+            Bukkit.getLogger().info("inside trust");
             if (!checkPlayerRan(commandSender)) {
                 commandSender.sendMessage("Command not ran by player");
                 return true;
@@ -89,13 +94,17 @@ public class Commands implements CommandExecutor {
             }
 
             String playerUUIDToAdd = String.valueOf(playerToTrust.getUniqueId());
+            Bukkit.getLogger().info(playerUUIDToAdd);
             if (!trustedPlayers.contains(playerUUIDToAdd)) {
                 trustedPlayers.add(playerUUIDToAdd);
                 trustsConfig.set(String.valueOf(player.getUniqueId()), trustedPlayers);
                 trustsConfig.save(trustsFile);
+                Bukkit.getLogger().info(trustedPlayers.toString());
                 commandSender.sendMessage("Successfully trusted player.");
             } else {
                 commandSender.sendMessage("Player already trusted.");
+                Bukkit.getLogger().info("already trusted");
+                Bukkit.getLogger().info(trustedPlayers.toString());
             }
             return true;
         }catch(Exception e) {

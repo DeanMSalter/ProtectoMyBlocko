@@ -3,6 +3,7 @@ general:
 excludeBlocks: [COBBLESTONE, DIRT]
 highValueBlocks: [DIAMOND_BLOCK, IRON_BLOCK, GOLD_BLOCK, EMERALD_BLOCK]
 protectionDelay: 900
+abandonedDays: 14
 messages:
   canNotBreak: "You need to play for an hour before you can break blocks placed by other players. Use §c/rank§r to check your playtime. Your friend can allow you to break their blocks with §c/trust (playerName)."
   canNotOpen: "You need to play for an hour before you can open chests placed by other players. Use §c/rank§r to check your playtime. Your friend can allow you to open their blocks with §c/trust (playerName)."
