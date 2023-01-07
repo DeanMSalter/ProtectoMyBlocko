@@ -8,3 +8,4 @@ messages:
   canNotBreak: "You need to play for an hour before you can break blocks placed by other players. Use §c/rank§r to check your playtime. Your friend can allow you to break their blocks with §c/trust (playerName)."
   canNotOpen: "You need to play for an hour before you can open chests placed by other players. Use §c/rank§r to check your playtime. Your friend can allow you to open their blocks with §c/trust (playerName)."
   canNotBreakHighValue: "You cannot break a players high value blocks. They can §c/trust §r you or you can wait until they have abandoned the server."
+  canNotUseArmorStands: "You need to play for 3 hours before you can use armor stands."

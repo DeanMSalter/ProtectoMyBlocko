@@ -33,6 +33,10 @@ public class Config{
     public String getCanNotBreakHighValue(){
         return main.getConfig().getString("messages.canNotBreakHighValue");
     }
+    public String getCanNotUseArmorStands(){
+        return main.getConfig().getString("messages.canNotUseArmorStands");
+    }
+
     public int getAbandonedDays(){
         return main.getConfig().getInt("abandonedDays");
     }

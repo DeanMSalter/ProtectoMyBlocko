@@ -12,8 +12,11 @@ import org.bukkit.block.Dropper;
 import org.bukkit.block.Hopper;
 import org.bukkit.block.ShulkerBox;
 import org.bukkit.entity.ArmorStand;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.ItemFrame;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
@@ -22,10 +25,12 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerArmorStandManipulateEvent;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -136,6 +141,41 @@ public class Listeners implements Listener {
             event.getDamager().sendMessage(config.getCanNotBreak());
         }
     }
+
+    @EventHandler
+    public void onInventoryOpenEvent(PlayerArmorStandManipulateEvent event){
+        if (!event.getPlayer().hasPermission("ProtectoMyBlocko.bypass")) {
+            event.getPlayer().sendMessage(config.getCanNotUseArmorStands());
+            event.setCancelled(true);
+            return;
+        }
+    }
+
+    @EventHandler
+    public void onArmorStandDestroy(EntityDamageByEntityEvent event) {
+        if(!(event.getDamager() instanceof Player) && !(event.getDamager() instanceof Arrow)) return;
+        if (!(event.getEntity() instanceof LivingEntity)) return;
+        if(!(event.getEntity() instanceof ArmorStand)) return;
+        final LivingEntity livingEntity = (LivingEntity)event.getEntity();
+        if(!livingEntity.getType().equals(EntityType.ARMOR_STAND)){
+            return;
+        }
+        Player player = null;
+        if (event.getDamager() instanceof Arrow){
+            Arrow arrow = (Arrow) event.getDamager();
+            if (arrow.getShooter() instanceof Player){
+                player = (Player) arrow.getShooter();
+            }else {
+                event.setCancelled(true);
+            }
+        }
+
+        if (!player.hasPermission("ProtectoMyBlocko.bypass")) {
+            player.sendMessage(config.getCanNotUseArmorStands());
+            event.setCancelled(true);
+        }
+    }
+
     @EventHandler
     public void onInventoryOpenEvent(InventoryOpenEvent event){
         InventoryHolder holder = event.getInventory().getHolder();
